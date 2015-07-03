@@ -5,16 +5,16 @@ require 'zfs'
 require 'open3'
 
 shared_context "vagrant" do
-	before(:all) do
-		ZFS.zfs_path   = %w(sudo zfs)
-		ZFS.zpool_path = %w(sudo zpool)
-	end
+  before(:all) do
+    ZFS.zfs_path   = %w(sudo zfs)
+    ZFS.zpool_path = %w(sudo zpool)
+  end
 
-	after(:all) do
-		Open3.capture2e(*(ZFS.zfs_path+%w('destroy -r tank/foo'])))
-		Open3.capture2e(*(ZFS.zfs_path+%w('destroy -r tank/bar')))
+  after(:all) do
+    Open3.capture2e(*(ZFS.zfs_path+%w('destroy -r tank/foo'])))
+    Open3.capture2e(*(ZFS.zfs_path+%w('destroy -r tank/bar')))
 
-		ZFS.zfs_path   = 'zfs'
-		ZFS.zpool_path = 'zpool'
-	end
+    ZFS.zfs_path   = 'zfs'
+    ZFS.zpool_path = 'zpool'
+  end
 end

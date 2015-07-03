@@ -14,62 +14,62 @@ ZFS is mutable, and contains potentially very destructive methods.
 ## Usage
 
 ```ruby
-	ZFS.pools                   # => [<ZFS:tank>]
+  ZFS.pools                   # => [<ZFS:tank>]
 
-	fs = ZFS('tank/foo')        # => <ZFS:tank/foo>
-	fs.create                   # creates the filesystem
-	fs.exist?                   # => true
-	fs.name                     # => 'tank/foo'
-	fs.mountpoint               # => '/tank/foo'
+  fs = ZFS('tank/foo')        # => <ZFS:tank/foo>
+  fs.create                   # creates the filesystem
+  fs.exist?                   # => true
+  fs.name                     # => 'tank/foo'
+  fs.mountpoint               # => '/tank/foo'
 
-	ZFS('/tank/foo')            # => <ZFS:tank/foo>
+  ZFS('/tank/foo')            # => <ZFS:tank/foo>
 
-	fs.parent                   # => <ZFS:tank>
-	fs.parent.parent            # => nil
+  fs.parent                   # => <ZFS:tank>
+  fs.parent.parent            # => nil
 
-	fs.available                # returns bytes available in the filesystem
-	fs.type                     # => :filesystem
-	fs.checksum = :fletcher4
-	fs.readonly = true
-	fs.readonly?                # => true
-	# plus all other properties defined in (currently) ZFS v28
+  fs.available                # returns bytes available in the filesystem
+  fs.type                     # => :filesystem
+  fs.checksum = :fletcher4
+  fs.readonly = true
+  fs.readonly?                # => true
+  # plus all other properties defined in (currently) ZFS v28
 
-	fs['org.freebsd:swap'] = 1  # sets the custom property 'org.freebsd:swap' to 1
-	fs['org.freebsd:swap']      # => 1
+  fs['org.freebsd:swap'] = 1  # sets the custom property 'org.freebsd:swap' to 1
+  fs['org.freebsd:swap']      # => 1
 
-	(fs + 'bar').create         # => <ZFS:tank/foo/bar>
-	(fs + 'bar/baz').create     # => <ZFS:tank/foo/bar/baz>
-	fs.children                 # => [<ZFS:tank/foo/bar]
-	fs.children(recursive: true)# => [<ZFS:tank/foo/bar>, <ZFS:tank/foo/bar/baz>]
+  (fs + 'bar').create         # => <ZFS:tank/foo/bar>
+  (fs + 'bar/baz').create     # => <ZFS:tank/foo/bar/baz>
+  fs.children                 # => [<ZFS:tank/foo/bar]
+  fs.children(recursive: true)# => [<ZFS:tank/foo/bar>, <ZFS:tank/foo/bar/baz>]
 
-	s = fs.snapshot('snapname') # => <ZFS:tank/foo@snapname>
-	s.parent                    # => <ZFS:tank/foo>
-	fs.snapshots                # => [<ZFS:tank/foo@snapname>]
-	s.destroy!                  # destroys snapshot
+  s = fs.snapshot('snapname') # => <ZFS:tank/foo@snapname>
+  s.parent                    # => <ZFS:tank/foo>
+  fs.snapshots                # => [<ZFS:tank/foo@snapname>]
+  s.destroy!                  # destroys snapshot
 
-	# Take a recursive snapshot ('zfs snapshot -r')
-	fs.snapshot('snapname', children: true)
-	# => [<ZFS:tank/foo@snapname>, <ZFS:tank/foo/bar@snapname, ...]
+  # Take a recursive snapshot ('zfs snapshot -r')
+  fs.snapshot('snapname', children: true)
+  # => [<ZFS:tank/foo@snapname>, <ZFS:tank/foo/bar@snapname, ...]
 
-	# Destroy a snapshot recursively
-	ZFS('tank/foo@snapname').destroy!(children: true)
+  # Destroy a snapshot recursively
+  ZFS('tank/foo@snapname').destroy!(children: true)
 
-	s = fs.snapshot('snapname') # => <ZFS:tank/foo@snapname>
-	fs2 = s.clone('tank/bar')   # => <ZFS:tank/bar>
-	fs2.promote!
+  s = fs.snapshot('snapname') # => <ZFS:tank/foo@snapname>
+  fs2 = s.clone('tank/bar')   # => <ZFS:tank/bar>
+  fs2.promote!
 
-	fs2.rename('tank/baz')
+  fs2.rename('tank/baz')
 
-	snapshot.send_to(fs)        # ZFS send/receive rolled into one - needs long description
+  snapshot.send_to(fs)        # ZFS send/receive rolled into one - needs long description
 
-	Still missing inherit, mount/unmount, share/unshare, and maybe send/receive
+  Still missing inherit, mount/unmount, share/unshare, and maybe send/receive
 
-	# Shell out to `ssh`, and assume `zfs` and `zpool` is in path on remote host
-	ZFS('tank/foo', hostname: 'foo.example.com')
+  # Shell out to `ssh`, and assume `zfs` and `zpool` is in path on remote host
+  ZFS('tank/foo', hostname: 'foo.example.com')
 
-	# Can be set to either a String or an Array
-	ZFS.zfs_path                # => '/sbin/zfs'
-	ZFS.zpool_path              # => '/sbin/zpool'
+  # Can be set to either a String or an Array
+  ZFS.zfs_path                # => '/sbin/zfs'
+  ZFS.zpool_path              # => '/sbin/zpool'
 ```
 
 ## Development
